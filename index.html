@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yash Sharma | Full Stack Developer & AI Enthusiast</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Three.js for 3D animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS (Properly segregated section) -->
+    <style>
+        /* Custom Tailwind Configuration */
+        :root {
+            --primary: #10b981; /* Emerald 500 */
+            --primary-dark: #059669; /* Emerald 600 */
+        }
+        /* Custom CSS for smooth scrolling and animation setup */
+        html { scroll-behavior: smooth; }
+        
+        /* Scroll Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Fix for long email address in contact section */
+        .break-word { word-break: break-all; }
+        
+        /* Three.js Canvas Styling */
+        #home-canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        #home-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 10rem;
+            padding-bottom: 10rem;
+        }
+        
+        /* Chatbot Button Styling */
+        #chatbot-btn {
+            background-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        #chatbot-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.8);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans" oncontextmenu="return false;">
+
+    <!-- Chatbot Data (Knowledge Base - Separate from main JS logic) -->
+    <script>
+        const USER_RESUME_DATA = {
+            name: "Yash Sharma",
+            title: "Full Stack Developer | AI Enthusiast",
+            location: "Indore (M.P)",
+            summary: "I am a passionate and quick-learning Software Engineer (Java Developer) with a strong background in Java, Spring, and Spring Boot. I have hands-on experience in building enterprise-level applications, working with databases, ORM tools, and web frameworks. I enjoy applying object-oriented principles, design patterns, and agile practices to create scalable and reliable solutions.",
+            contact: {
+                phone: "7724880337",
+                email: "yash.fullstackdeveloper@gmail.com",
+                linkedin: "https://www.linkedin.com/in/yash-sharma-pro/"
+            },
+            skills: {
+                languages: ["Core Java", "Advance Java","AI/ML Concepts", "Python", "JavaScript", "HTML5", "CSS3" ],
+                frameworks: ["Spring", "Spring Boot", "Maven", "JSP", "Servlets"],
+                databases: ["SQL", "My-SQL", "Redis (for caching)"],
+                tools: ["Agile", "JIRA", "SourceTree", "Git", "GitHub", "Eclipse", "Netbeans", "VS code", 
+                        "ActiveMQ", "Jenkins", "BitBucket", "Postman", "AWS (EC2, RDS, Secret Manager)", "Linux", "Junit"],
+                soft: ["Problem-Solving", "Leadership", "Communication", "Team Collaboration", "Time Management"],
+            },
+            projects: [
+                {
+                    name: "SHORTIFY - Full-Stack Web Application",
+                    tech: "Java, Spring Boot, React.js, JWT Authentication, PostgreSQL",
+                    description: "Developed a scalable URL shortening application. Features include generating unique shortened links, secure user login/registration with JWT, analytics visualization using Chart.js to track link clicks, and role-based access control. Followed a modular architecture for maintainability.",
+                    link: "https://github.com/YashRaj0307/Shortify-main"
+                },
+                {
+                    name: "E-Commerce Application (Microservices)",
+                    tech: "Java, Spring Boot, Microservices, RESTful APIs, React.js, MySQL",
+                    description: "Developed a full-stack e-commerce platform from scratch. Designed a modular microservices architecture to decouple business functionalities like user management, product catalog, and order processing, ensuring high scalability and maintainability. Responsible for performance optimization and database integration.",
+                    link: "https://github.com/YashRaj0307/ecommerce-java-full-stack"
+                },
+                {
+                    name: "Employee-Payroll-System",
+                    tech: "Java, AWT,Swing, SQLite",
+                    description: "Employee-Payroll System is a Java-based desktop application that manages employee records, calculates and updates salaries, and generates payslips in PDF format using a local SQLite database. It provides an easy interface for adding, editing, and managing payroll details for employees.",
+                    link: "https://github.com/YashRaj0307/Employee-Payroll-System"
+                },
+                {
+                    name: "AI Chatbot Integration",
+                    tech: "Java, Springboot, OpenAI, NLP, RESTful APIs, React.js",
+                    description: "Built an end-to-end AI-powered chatbot integrated into a web application. Developed backend services using Springboot to handle user queries, process natural language using OpenAI's GPT models, and manage conversation context. Created a responsive React.js frontend for seamless user interaction.",
+                    link: "#"
+                }
+            ],
+            experience: [
+                {
+                    role: "Java Developer Intern, Hulk Hire Tech (Remote)",
+                    duration: "Sept 2024 - Oct 2024",
+                    details: [
+                        "Developed and integrated core microservices and Restful API's for a payment system (Paypal integration).",
+                        "Implemented OAuth 2.0 and HMAC-SHA 256 in the Validation Service.",
+                        "Developed Recon and complete End-to-End Exceptional Handling.",
+                        "Deployed the application on AWS EC2 instances with AWS RDS and used Redis for caching to reduce response time for frequently accessed data."
+                    ]
+                }
+            ],
+            education: [
+                { degree: "Master of Computer Application", institute: "Institute of Professional Studies Academy, Indore", cgpa: "8.2", year: "June 2025" },
+                { degree: "Bachelor of Computer Application", institute: "Institute of Professional Studies Academy, Indore", cgpa: "8.5", year: "June 2023" }
+            ],
+            certifications: [
+                { name: "Full Stack Java Developer Certificate", link: "#" },
+                { name: "Python Certificate", link: "#" },
+                { name: "Coursera: Springboot Certificate", link: "#" },
+                { name: "Postman API Expert Certificate", link: "#" }
+            ]
+        };
+        // --- RULE-BASED KNOWLEDGE BASE ---
+        // The chatbot uses this array of patterns and responses. No external API is needed.
+        const CHATBOT_KNOWLEDGE_BASE = [
+            { 
+                patterns: ["hi", "hello", "hey", "greetings", "start"], 
+                response: `Hello! I'm Yash's AI Assistant. You can ask me about his **Skills**, **Projects**, **Experience**, **Education**, or **Contact** info.`
+            },
+            { 
+                patterns: ["who are you", "tell me about yourself", "summary", "about me", "About Yash", "introduction","bio","tell me about yash"], 
+                response: USER_RESUME_DATA.summary + ` Currently based in ${USER_RESUME_DATA.location}.`
+            },
+            
+            { 
+                patterns: ["contact", "email", "phone", "reach"], 
+                response: `Yash can be contacted directly by phone at **${USER_RESUME_DATA.contact.phone}** or via email at **${USER_RESUME_DATA.contact.email}**. Connect on **LinkedIn:** ${USER_RESUME_DATA.contact.linkedin}`
+            },
+            { 
+                patterns: ["skills", "languages", "tech stack", "technologies"], 
+                response: `Yash's core technical skills include:\n\n**Languages:** ${USER_RESUME_DATA.skills.languages.join(', ')}\n**Frameworks:** ${USER_RESUME_DATA.skills.frameworks.join(', ')}\n**Databases:** ${USER_RESUME_DATA.skills.databases.join(', ')}\n**Tools/DevOps:** AWS, Docker, Git, JIRA, JUnit, Postman, Jenkins, ActiveMQ.`
+            },
+            { 
+                patterns: ["education", "study", "college", "degree"], 
+                response: `Yash's education details:\n\n1. **${USER_RESUME_DATA.education[0].degree}** (CGPA ${USER_RESUME_DATA.education[0].cgpa}) from ${USER_RESUME_DATA.education[0].institute}, graduating ${USER_RESUME_DATA.education[0].year}.\n2. **${USER_RESUME_DATA.education[1].degree}** (CGPA ${USER_RESUME_DATA.education[1].cgpa}) from ${USER_RESUME_DATA.education[1].institute}, graduating ${USER_RESUME_DATA.education[1].year}.`
+            },
+            { 
+                patterns: ["projects", "what he built", "show work"], 
+                response: `Yash has worked on several projects. The key ones include:\n\n1. **SHORTIFY:** Scalable URL shortening application.\n2. **E-Commerce Application:** Modular microservices platform.\n3. **AI Chatbot Integration:** Springboot backend with OpenAI/NLP.\n\nAsk about a specific project name like 'SHORTIFY' for details!`
+            },
+            { 
+                patterns: ["shortify"], 
+                response: `**SHORTIFY - URL Shortening App**\n**Tech:** ${USER_RESUME_DATA.projects[0].tech}\n**Description:** ${USER_RESUME_DATA.projects[0].description}`
+            },
+            { 
+                patterns: ["e-commerce", "e commerce project"], 
+                response: `**E-Commerce Application (Microservices)**\n**Tech:** ${USER_RESUME_DATA.projects[1].tech}\n**Description:** ${USER_RESUME_DATA.projects[1].description}`
+            },
+            { 
+                patterns: ["ai chatbot", "openai", "nlp"], 
+                response: `**AI Chatbot Integration**\n**Tech:** ${USER_RESUME_DATA.projects[3].tech}\n**Description:** ${USER_RESUME_DATA.projects[3].description}`
+            },
+            { 
+                patterns: ["internship", "experience", "hulkhire"], 
+                response: `Yash was a **Java Developer Intern** at Hulk Hire Tech from ${USER_RESUME_DATA.experience[0].duration}. He developed and integrated core microservices for a payment system, implemented OAuth 2.0/HMAC-SHA 256, and deployed on **AWS EC2/RDS** using Redis for caching.`
+            },
+            { 
+                patterns: ["certifications", "certificates", "certified"], 
+                response: `Yash holds certifications in: **${USER_RESUME_DATA.certifications.map(c => c.name).join(', ')}**.`
+            },
+            { 
+                patterns: ["availability", "hiring", "work status", "seeking"], 
+                response: "Yash is currently **actively seeking opportunities** where he can leverage his Java, Spring Boot, and Microservices expertise. Please refer to the **Contact** section."
+            },
+            { 
+                patterns: ["java developer", "springboot", "java", "core java"], 
+                response: "Yash is a dedicated Java Developer proficient in Core and Advanced Java, specializing in Spring and Spring Boot for building scalable, robust microservices and RESTful APIs."
+            },
+            { 
+                patterns: ["aws", "cloud", "deployment"], 
+                response: "Yash has experience deploying applications on **AWS EC2** instances and managing databases with **AWS RDS**. He also utilizes **AWS Secret Manager** and is familiar with cloud deployment practices."
+            },
+            { 
+                patterns: ["agile", "jira"], 
+                response: "Yash has a strong foundation in **Agile methodologies** and uses tools like **JIRA** and **Git/Bitbucket** for efficient project management and collaboration."
+            },
+            { 
+                patterns: ["Hobbies", "interest", "free time"], 
+                response: `In his free time, Yash enjoys exploring new technologies, contributing to open-source projects, and enhancing his skills in AI/ML concepts.`
+            },
+            { 
+                patterns: ["Rate yash coding skills", "how good is yash in coding"], 
+                response: `Yash is a proficient coder with strong problem-solving skills. He consistently writes clean, efficient, and maintainable code, adhering to best practices and design patterns.`
+            },
+            // Fallback Response (Must be last)
+            { 
+                patterns: ["fallback"], 
+                response: "I can only provide information based on Yash's portfolio data. Try asking a general topic like 'skills', 'projects', or 'contact'."
+            }
+        ];
+    </script>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-40 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="#home" class="text-xl font-bold text-[--primary]">YASH SHARMA</a>
+                <div class="flex space-x-4">
+                    <a href="#about" class="text-gray-600 hover:text-[--primary] transition duration-150 hidden sm:block" accesskey="1">About</a>
+                    <a href="#skills" class="text-gray-600 hover:text-[--primary] transition duration-150 hidden sm:block" accesskey="2">Skills</a>
+                    <a href="#projects" class="text-gray-600 hover:text-[--primary] transition duration-150 hidden sm:block" accesskey="3">Projects</a>
+                    <a href="#certifications" class="text-gray-600 hover:text-[--primary] transition duration-150 hidden sm:block">Certifications</a>
+                    <a href="#contact" class="text-gray-600 hover:text-[--primary] transition duration-150 hidden sm:block" accesskey="4">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section with 3D Animation -->
+        <section id="home" class="relative overflow-hidden min-h-screen flex items-center justify-center bg-gray-900 text-white">
+            <div id="home-canvas-container"></div>
+            <div id="home-content" class="text-center px-4 max-w-4xl">
+                <h1 class="text-4xl sm:text-6xl font-extrabold mb-4 fade-in">Yash Sharma</h1>
+                <p class="text-xl sm:text-2xl text-[--primary] font-medium mb-8 fade-in" style="transition-delay: 0.2s;">
+                    Full Stack Developer | AI Enthusiast
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 fade-in" style="transition-delay: 0.4s;">
+                    <a href="#projects" class="px-8 py-3 bg-[--primary] text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-[--primary-dark] transition duration-300 transform hover:scale-105">View Projects</a>
+                    <a href="#contact" class="px-8 py-3 bg-white text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">Get in Touch</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-4 border-[--primary] inline-block pb-1 fade-in">About Me</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+                    <div class="md:col-span-2 text-lg leading-relaxed fade-in">
+                        <p class="mb-4">I am a passionate and quick-learning Full Stack AI Developer with a strong background in Java, Python, AI/ML, and RAG. I have hands-on experience in building enterprise-level applications, working with databases, ORM tools, and web frameworks.</p>
+                        <p class="mb-4">My approach involves applying object-oriented principles, design patterns, and agile practices to create scalable and reliable solutions. I am particularly interested in the intersection of Full Stack Development and AI/ML Concepts, constantly looking for ways to integrate intelligent features into robust systems.</p>
+                        <p>I thrive in environments that value Clean Code Principles, Test-Driven Development (TDD), and continuous improvement, aiming for performance-optimized applications every time.</p>
+                    </div>
+                    <div class="md:col-span-1 fade-in" style="transition-delay: 0.2s;">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-900">Education Highlights</h3>
+                        <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                            <p class="font-bold">Master of Computer Application (CGPA 8.2)</p>
+                            <p class="text-sm text-gray-600">Institute of Professional Studies Academy, Indore | June 2025</p>
+                            <hr class="my-3">
+                            <p class="font-bold">Bachelor of Computer Application (CGPA 8.5)</p>
+                            <p class="text-sm text-gray-600">Institute of Professional Studies Academy, Indore | June 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-16 md:py-24 bg-gray-100">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-4 border-[--primary] inline-block pb-1 fade-in">Skills & Technologies</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6">
+                    <!-- Core Java -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in">
+                        <i data-lucide="coffee" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Java</p>
+                    </div>
+                    <!-- Spring Boot -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.1s;">
+                        <i data-lucide="leaf" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Spring Boot</p>
+                    </div>
+                    <!-- React.js -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.2s;">
+                        <i data-lucide="layout-grid" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">React.js</p>
+                    </div>
+                    <!-- Python -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.2s;">
+                        <i data-lucide="cpu" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Python</p>
+                    </div>
+                    <!-- AI/ML Concepts -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.3s;">
+                        <i data-lucide="brain" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">AI/ML Concepts</p>
+                    </div>
+                    <!-- Gen-AI -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.3s;">
+                        <i data-lucide="zap" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Gen-AI</p>
+                    </div>
+                    <!-- Databases -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.4s;">
+                        <i data-lucide="database" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">MySQL/Redis</p>
+                    </div>
+                    <!-- Microservices/REST -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.5s;">
+                        <i data-lucide="git-fork" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Microservices</p>
+                    </div>
+                    <!-- DevOps/Tools -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.6s;">
+                        <i data-lucide="container" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Docker/Linux</p>
+                    </div>
+                    <!-- AWS -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.7s;">
+                        <i data-lucide="cloud" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">AWS</p>
+                    </div>
+                    <!-- TDD/Agile -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.8s;">
+                        <i data-lucide="check-circle" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">TDD / Agile</p>
+                    </div>
+                    <!-- Git -->
+                    <div class="bg-white p-4 rounded-lg shadow-lg text-center transform hover:scale-105 transition duration-300 fade-in" style="transition-delay: 0.9s;">
+                        <i data-lucide="git-branch" class="h-8 w-8 text-[--primary] mx-auto mb-2"></i>
+                        <p class="font-semibold text-gray-800">Git/Bitbucket</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-16 md:py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-4 border-[--primary] inline-block pb-1 fade-in">Key Projects</h2>
+                <div class="space-y-12">
+
+                    <!-- Project 1: SHORTIFY -->
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 fade-in">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">SHORTIFY - Full-Stack URL Shortener</h3>
+                        <p class="text-md text-[--primary-dark] mb-4 font-medium">Tech Stack: Java, Spring Boot, React.js, JWT Authentication, PostgreSQL</p>
+                        <p class="text-gray-700 leading-relaxed mb-4">Developed a scalable URL shortening application. Features include generating unique shortened links, secure user login/registration with JWT, analytics visualization using Chart.js to track link clicks, and role-based access control. Followed a modular architecture for maintainability.</p>
+                        <a href="https://github.com/YashRaj0307/Shortify-main" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300">
+                            <i data-lucide="github" class="h-5 w-5 mr-2"></i>
+                            Project Review on GitHub
+                        </a>
+                    </div>
+
+                    <!-- Project 2: E-Commerce Application -->
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 fade-in" style="transition-delay: 0.1s;">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">E-Commerce Application (Microservices)</h3>
+                        <p class="text-md text-[--primary-dark] mb-4 font-medium">Tech Stack: Java, Spring Boot, Microservices, RESTful APIs, React.js, MySQL</p>
+                        <p class="text-gray-700 leading-relaxed mb-4">Developed a full-stack e-commerce platform from scratch. Designed a modular microservices architecture to decouple business functionalities like user management, product catalog, and order processing, ensuring high scalability and maintainability. Responsible for performance optimization and database integration.</p>
+                        <a href="https://github.com/YashRaj0307/ecommerce-java-full-stack" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300">
+                            <i data-lucide="github" class="h-5 w-5 mr-2"></i>
+                            Project Review on GitHub
+                        </a>
+                    </div>
+
+                    <!-- Project 3: Employee-Payroll-System -->
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 fade-in" style="transition-delay: 0.2s;">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Employee-Payroll-System (Desktop App)</h3>
+                        <p class="text-md text-[--primary-dark] mb-4 font-medium">Tech Stack: Java, AWT,Swing, SQLite</p>
+                        <p class="text-gray-700 leading-relaxed mb-4">Employee-Payroll System is a Java-based desktop application that manages employee records, calculates and updates salaries, and generates payslips in PDF format using a local SQLite database. It provides an easy interface for adding, editing, and managing payroll details for employees.</p>
+                        <a href="https://github.com/YashRaj0307/Employee-Payroll-System" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300">
+                            <i data-lucide="github" class="h-5 w-5 mr-2"></i>
+                            Project Review on GitHub
+                        </a>
+                    </div>
+
+                    <!-- Project 4: AI Chatbot Integration -->
+                    <div class="bg-gray-100 p-8 rounded-xl shadow-xl hover:shadow-2xl transition duration-300 fade-in" style="transition-delay: 0.3s;">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">AI Chatbot Integration</h3>
+                        <p class="text-md text-[--primary-dark] mb-4 font-medium">Tech Stack: Java, Springboot, OpenAI, NLP, RESTful APIs, React.js</p>
+                        <p class="text-gray-700 leading-relaxed mb-4">Built an end-to-end AI-powered chatbot integrated into a web application. Developed backend services using Springboot to handle user queries, process natural language using OpenAI's GPT models, and manage conversation context. Created a responsive React.js frontend for seamless user interaction.</p>
+                        <a href="#" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300">
+                            <i data-lucide="github" class="h-5 w-5 mr-2"></i>
+                            Project Review (Link Placeholder)
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Certifications Section -->
+        <section id="certifications" class="py-16 md:py-24 bg-gray-100">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-4 border-[--primary] inline-block pb-1 fade-in">Certifications</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Cert 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center fade-in">
+                        <i data-lucide="award" class="h-10 w-10 text-[--primary] mx-auto mb-4"></i>
+                        <h4 class="text-xl font-semibold mb-2">Full Stack Java Developer Certificate</h4>
+                        <a href="#" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View Credential</a>
+                    </div>
+                    <!-- Cert 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center fade-in" style="transition-delay: 0.1s;">
+                        <i data-lucide="award" class="h-10 w-10 text-[--primary] mx-auto mb-4"></i>
+                        <h4 class="text-xl font-semibold mb-2">Python Certificate</h4>
+                        <a href="#" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View Credential</a>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center fade-in" style="transition-delay: 0.2s;">
+                        <i data-lucide="award" class="h-10 w-10 text-[--primary] mx-auto mb-4"></i>
+                        <h4 class="text-xl font-semibold mb-2">Coursera: Springboot Certificate</h4>
+                        <a href="#" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View Credential</a>
+                    </div>
+                    <!-- Cert 3 -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center fade-in" style="transition-delay: 0.3s;">
+                        <i data-lucide="award" class="h-10 w-10 text-[--primary] mx-auto mb-4"></i>
+                        <h4 class="text-xl font-semibold mb-2">Postman API Expert Certificate</h4>
+                        <a href="#" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View Credential</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 md:py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-900 border-b-4 border-[--primary] inline-block pb-1 fade-in">Contact Me</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="p-6 rounded-xl shadow-lg bg-gray-100 fade-in">
+                        <i data-lucide="phone" class="h-8 w-8 text-[--primary] mx-auto mb-3"></i>
+                        <h4 class="text-xl font-semibold mb-2">Call</h4>
+                        <p class="text-gray-600">7724880337</p>
+                    </div>
+                    <div class="p-6 rounded-xl shadow-lg bg-gray-100 fade-in" style="transition-delay: 0.1s;">
+                        <i data-lucide="mail" class="h-8 w-8 text-[--primary] mx-auto mb-3"></i>
+                        <h4 class="text-xl font-semibold mb-2">Email</h4>
+                        <p class="text-gray-600 break-word">yash.fullstackdeveloper@gmail.com</p>
+                    </div>
+                    <div class="p-6 rounded-xl shadow-lg bg-gray-100 fade-in" style="transition-delay: 0.2s;">
+                        <i data-lucide="linkedin" class="h-8 w-8 text-[--primary] mx-auto mb-3"></i>
+                        <h4 class="text-xl font-semibold mb-2">LinkedIn</h4>
+                        <a href="https://www.linkedin.com/in/yash-sharma-pro/" target="_blank" class="text-blue-600 hover:text-blue-800">Yash-Sharma-Pro</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p>&copy; 2025 Yash Sharma. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <button id="chatbot-btn" class="fixed bottom-6 right-6 p-4 rounded-full text-white shadow-xl z-50">
+        <i data-lucide="message-square" class="h-6 w-6"></i>
+    </button>
+
+    <!-- Chatbot Modal (Initially Hidden) -->
+    <div id="chatbot-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md h-3/4 flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-[--primary] rounded-t-xl">
+                <h3 class="text-lg font-semibold text-white">Ask Yash's AI Assistant</h3>
+                <button id="close-modal-btn" class="text-white hover:text-gray-100">
+                    <i data-lucide="x" class="h-6 w-6"></i>
+                </button>
+            </div>
+            <!-- Chat Window -->
+            <div id="chat-window" class="flex-grow p-4 overflow-y-auto space-y-4">
+                <!-- Initial Bot Message -->
+                <div class="flex justify-start">
+                    <div class="bg-gray-200 p-3 rounded-xl max-w-xs text-sm">
+                        Hello! I'm Yash's AI assistant. Ask me anything about his projects, skills (Java, React, AI), or experience!
+                    </div>
+                </div>
+            </div>
+            <!-- User Input -->
+            <div class="p-4 border-t border-gray-200 flex space-x-2">
+                <input type="text" id="user-input" placeholder="e.g., Say 'Hi'" class="flex-grow p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--primary]">
+                <button id="send-btn" class="px-4 py-3 bg-[--primary] text-white rounded-lg hover:bg-[--primary-dark] disabled:opacity-50 transition duration-300">
+                    <i data-lucide="send" class="h-5 w-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- RULE-BASED LOGIC FUNCTION (FALLBACK/LOCAL CHECK) ---
+        function getBotResponse(userInput) {
+            const text = userInput.toLowerCase().trim();
+
+            // If the input is empty or just whitespace
+            if (text.length === 0) {
+                return "Please enter a question about Yash's portfolio.";
+            }
+            
+            // Iterate through the knowledge base to find a match
+            for (const item of CHATBOT_KNOWLEDGE_BASE) {
+                for (const pattern of item.patterns) {
+                    // Simple keyword matching (if the user's text contains the pattern)
+                    if (text.includes(pattern)) {
+                        return item.response;
+                    }
+                }
+            }
+
+            // If no specific pattern is matched, return the general fallback
+            return CHATBOT_KNOWLEDGE_BASE.find(item => item.patterns.includes("fallback")).response;
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide Icons
+            lucide.createIcons();
+
+            // --- Privacy Deterrents (Code Obfuscation/Disabling) ---
+            const codePrivacy = {
+                // Disables right-click context menu (already applied via oncontextmenu="return false;" on <body>)
+                disableContextMenu: () => {
+                    document.addEventListener('contextmenu', e => e.preventDefault());
+                },
+                // Disables common developer tool shortcuts
+                disableDevTools: () => {
+                    document.addEventListener('keydown', e => {
+                        // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U (View source)
+                        if (e.key === 'F12' || 
+                            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                            (e.ctrlKey && e.key === 'U')) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+            };
+            codePrivacy.disableContextMenu();
+            codePrivacy.disableDevTools();
+
+            // --- Keyboard Shortcuts (Accessibility) ---
+            const setupShortcuts = () => {
+                const navMap = {
+                    '1': '#about',
+                    '2': '#skills',
+                    '3': '#projects',
+                    '4': '#contact',
+                    'h': '#home'
+                };
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.altKey) {
+                        const targetId = navMap[e.key.toLowerCase()];
+                        if (targetId) {
+                            e.preventDefault();
+                            document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            };
+            setupShortcuts();
+
+
+            // --- Three.js Animation Logic ---
+            const container = document.getElementById('home-canvas-container');
+            const scene = new THREE.Scene();
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            let camera, cube;
+
+            function initThree() {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+
+                camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+                camera.position.z = 5;
+
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setClearColor(0x000000, 0); // Transparent background
+                container.appendChild(renderer.domElement);
+
+                // Create a wireframe geometry (Dodecahedron represents complex, modular systems)
+                const geometry = new THREE.DodecahedronGeometry(3, 0);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0x10b981, // Emerald green
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.6
+                });
+                cube = new THREE.Mesh(geometry, material);
+                scene.add(cube);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (cube) {
+                    cube.rotation.x += 0.005;
+                    cube.rotation.y += 0.005;
+                }
+                renderer.render(scene, camera);
+            }
+
+            function onWindowResize() {
+                if (container && camera) {
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    if (width > 0 && height > 0) {
+                        camera.aspect = width / height;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(width, height);
+                    }
+                }
+            }
+
+            if (container) {
+                // Ensure section is loaded before initializing 3D
+                if (container.clientHeight > 0) {
+                    initThree();
+                    animate();
+                    window.addEventListener('resize', onWindowResize, false);
+                } else {
+                    // Fallback to wait for the container to have dimensions if it fails initially
+                    setTimeout(() => {
+                        if (container.clientHeight > 0) {
+                            initThree();
+                            animate();
+                            window.addEventListener('resize', onWindowResize, false);
+                        }
+                    }, 500);
+                }
+            }
+
+            // --- Scroll Animation (Intersection Observer) Logic ---
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('appear');
+                        // Optionally stop observing once it appears
+                        // obs.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Chatbot (Gemini API) Logic ---
+            const modal = document.getElementById('chatbot-modal');
+            const openBtn = document.getElementById('chatbot-btn');
+            const closeBtn = document.getElementById('close-modal-btn');
+            const chatWindow = document.getElementById('chat-window');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            openBtn.onclick = () => modal.classList.remove('hidden');
+            closeBtn.onclick = () => modal.classList.add('hidden');
+
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+                const bubble = document.createElement('div');
+                bubble.className = `p-3 whitespace-pre-wrap rounded-xl max-w-xs text-sm ${isUser ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`;
+                
+                // 1. Replace newlines with <br> tags
+                let formattedText = text.replace(/\n/g, '<br>');
+                
+                // 2. Replace Markdown bold markers (**) with <strong> tags
+                formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                // Set the formatted content
+                bubble.innerHTML = formattedText;
+
+                messageDiv.appendChild(bubble);
+                chatWindow.appendChild(messageDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+
+            // Obfuscated function structure to deter easy reading
+            const fn_getResponse = async (query) => {
+                // First, check local knowledge base for quick, predictable answers
+                const localResponse = getBotResponse(query);
+                
+                // Only use the API for fallback or if the local response is the generic fallback
+                if (localResponse !== CHATBOT_KNOWLEDGE_BASE.find(item => item.patterns.includes("fallback")).response) {
+                    return localResponse;
+                }
+
+                const systemPrompt = `You are Yash Sharma's dedicated AI Portfolio Assistant. Your sole purpose is to answer questions about Yash Sharma based ONLY on the following resume data. Do not make up facts or use external knowledge. If the answer is not in the data, politely say, 'I can only provide information based on Yash's portfolio data. Please try a different query related to his skills, projects, or experience.'
+
+                Yash Sharma's Data (JSON format):
+                ${JSON.stringify(USER_RESUME_DATA, null, 2)}
+
+                Instructions for response format:
+                1. Keep the response concise, professional, and easy to read.
+                2. Use Markdown formatting (like **bold**) for key terms.
+                3. Structure lists with line breaks for readability.
+                `;
+
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: query }] }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                for (let attempt = 0; attempt < 3; attempt++) {
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const result = await response.json();
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                        if (text) {
+                            return text;
+                        } else if (result.error) {
+                            console.error("API Error:", result.error);
+                            return "Error: Could not process the request due to an API issue.";
+                        } else {
+                            return "I received an empty response. Could you please rephrase?";
+                        }
+                    } catch (error) {
+                        if (error.status === 429 && attempt < 2) {
+                            const delay = Math.pow(2, attempt) * 1000;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            console.error("Fetch Error:", error);
+                            // Fallback to a simple message if API fails after retries
+                            return "I'm sorry, I'm having trouble connecting to the AI service right now. Please try a simple, direct question or check the portfolio sections directly.";
+                        }
+                    }
+                }
+                return "I'm sorry, the AI service is currently unavailable. Please check back later.";
+            };
+
+            async function handleSendMessage() {
+                const query = userInput.value.trim();
+                if (!query) return;
+
+                addMessage(query, true);
+                userInput.value = '';
+                sendBtn.disabled = true;
+
+                const loadingMessage = document.createElement('div');
+                loadingMessage.className = 'flex justify-start bot-loading';
+                loadingMessage.innerHTML = '<div class="bg-gray-200 p-3 rounded-xl max-w-xs text-sm"><i data-lucide="loader-2" class="animate-spin h-4 w-4 inline mr-1"></i> Typing...</div>';
+                chatWindow.appendChild(loadingMessage);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                lucide.createIcons();
+
+
+                const botResponse = await fn_getResponse(query);
+
+                const loadingIndicator = chatWindow.querySelector('.bot-loading');
+                if (loadingIndicator) {
+                    chatWindow.removeChild(loadingIndicator);
+                }
+
+                addMessage(botResponse, false);
+                sendBtn.disabled = false;
+            }
+
+            sendBtn.addEventListener('click', handleSendMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
